@@ -49,6 +49,6 @@ if(response.status_code == 200):
         "ingredients": site.get_ingredients(soup),
         "directions": site.get_directions(soup)
     }
-    filename = get_filename(site, url)
-    write_file(filename, json.dumps(obj), "json")
-    write_file(filename, get_html(obj), "html")
+    fname = get_filename(site, url)
+    write_file(fname, json.dumps(obj), "json", os.path.join("output", "json"))
+    write_file(fname, get_html(obj), "html", os.path.join("output", "html"))
