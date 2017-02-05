@@ -1,6 +1,9 @@
 #VIM Swap files
 *.swp
 
+#Ourpur directory made by the program
+output/
+
 #Below taken from Git repository
 #https://github.com/github/gitignore/blob/master/Python.gitignore
 
