@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+</head>
+<body>
+<h1>{{ title }}</h1>
+<h2>Ingredients</h2>
+    <ul>
+        {% for item in ingredients %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+<h2>Directions</h2>
+    <ul>
+        {% for item in directions %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</body>

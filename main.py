@@ -1,24 +1,38 @@
-import hashlib
+import re
 import requests
 import os
 import json
 from bs4 import BeautifulSoup
 from SiteSelector import SiteSelector
+from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
-def write_file(url, contents, extension, dir="output"):
-    """ Writes a file with the contents and extension passed.
-     The file name is taken as the MD5 hash of our URL
-     This will give us unique file names for each URL we fetch from """
-    if not os.path.exists(dir):
-        os.makedirs(dir)
+def get_filename(site, url):
+    url = url.rsplit("/", 1)[-1]
+    if(url.endswith(".html")):
+        url = url[:-5]
+    return re.sub('[^a-zA-Z ]+', '', url) + "_" + site.get_short_name()
 
-    filename = dir + hashlib.md5(url.encode('utf-8')).hexdigest()
+
+def write_file(filename, contents, extension, dir="output"):
     if extension:
         filename += "." + extension
 
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+
     with open(os.path.join(dir, filename), "w", encoding="utf-8") as file:
         file.write(contents)
+
+
+def get_html(recipe):
+    env = Environment(
+        loader=FileSystemLoader('templates'),
+        autoescape=select_autoescape(['html', 'xml'])
+    )
+    template = env.get_template('main.html')
+    return template.render(recipe)
+
 
 url = 'https://www.food52.com/recipes/25530-joanne-chang-s-hot-and-sour-soup'
 user_agent = ('Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 '
@@ -28,7 +42,6 @@ headers = {'User-Agent': user_agent}
 
 response = requests.get(url, headers=headers)
 if(response.status_code == 200):
-
     site = SiteSelector().get_site(url)
     soup = BeautifulSoup(response.text, 'html.parser')
     obj = {
@@ -36,6 +49,6 @@ if(response.status_code == 200):
         "ingredients": site.get_ingredients(soup),
         "directions": site.get_directions(soup)
     }
-    print(obj)
-    print(hashlib.md5(url.encode('utf-8')).hexdigest())
-    write_file(url, json.dumps(obj), "json")
+    filename = get_filename(site, url)
+    write_file(filename, json.dumps(obj), "json")
+    write_file(filename, get_html(obj), "html")

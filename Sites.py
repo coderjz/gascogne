@@ -4,7 +4,10 @@
 
 class Food52:
     def get_domain(self):
-            return "food52.com"
+        return "food52.com"
+
+    def get_short_name(self):
+        return "F52"
 
     def get_title(self, soup):
         return soup.select_one("h1.article-header-title").get_text()
