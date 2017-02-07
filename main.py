@@ -2,16 +2,14 @@ import re
 import requests
 import os
 import json
+from datetime import datetime
 from bs4 import BeautifulSoup
 from SiteSelector import SiteSelector
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
 
-def get_filename(site, url):
-    url = url.rsplit("/", 1)[-1]
-    if(url.endswith(".html")):
-        url = url[:-5]
-    return re.sub('[^a-zA-Z ]+', '', url) + "_" + site.get_short_name()
+def get_filename(site, title):
+    return re.sub('[^a-zA-Z ]+', '', title) + "_" + site.get_short_name()
 
 
 def write_file(filename, contents, extension, dir="output"):
@@ -47,8 +45,10 @@ if(response.status_code == 200):
     obj = {
         "title": site.get_title(soup),
         "ingredients": site.get_ingredients(soup),
-        "directions": site.get_directions(soup)
+        "directions": site.get_directions(soup),
+        "url": url,
+        "date_retrieved": datetime.now().strftime("%Y-%m-%d")
     }
-    fname = get_filename(site, url)
+    fname = get_filename(site, obj["title"])
     write_file(fname, json.dumps(obj), "json", os.path.join("output", "json"))
     write_file(fname, get_html(obj), "html", os.path.join("output", "html"))
