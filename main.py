@@ -2,10 +2,12 @@ import re
 import requests
 import os
 import json
+import sys
 from datetime import datetime
 from bs4 import BeautifulSoup
 from SiteSelector import SiteSelector
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+import argparse
 
 
 def get_filename(site, title):
@@ -32,7 +34,17 @@ def get_html(recipe):
     return template.render(recipe)
 
 
-url = 'https://www.food52.com/recipes/25530-joanne-chang-s-hot-and-sour-soup'
+parser = argparse.ArgumentParser()
+parser.add_argument('-u', '--url', default=None,
+                    help='URL to retrieve recipe from.')
+args = parser.parse_args()
+
+if args.url is not None:
+    url = args.url
+else:
+    print("No URL Entered.  Exiting.")
+    sys.exit()
+
 user_agent = ('Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 '
               '(KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36')
 headers = {'User-Agent': user_agent}
