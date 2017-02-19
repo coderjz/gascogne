@@ -2,19 +2,77 @@
 <html>
 <head>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <style>
+        h1 {
+            font-size: 1.4em;
+            text-align:center;
+        }
+
+        li {
+            font-size: 1em;
+        }
+
+        ul, ol {
+            /*TODO: Get bullets left aligned*/
+            /*padding-left:0px;*/
+        }
+
+        ol li {
+            padding-bottom:4px;
+        }
+
+        #size-change {
+            position:fixed;
+            bottom:0px;
+            left:10%;
+            right:10%;
+            border:2px solid #333;
+            border-bottom:0px;
+            padding:10px;
+            font-size:18px;
+        }
+
+        .line {
+            width:100%;
+            border-bottom:1px dashed black;
+            height:0px;
+        }
+
+        button {
+            font-size:18px;
+            /*TODO: Make buttons prettier */
+        }
+
+        @media print {
+            #size-change {
+                display: none;
+            }
+        }
+    </style>
 </head>
 <body>
 <h1>{{ title }}</h1>
-<h2>Ingredients</h2>
     <ul>
         {% for item in ingredients %}
             <li>{{ item }}</li>
         {% endfor %}
     </ul>
-<h2>Directions</h2>
-    <ul>
+<hr>
+    <ol>
         {% for item in directions %}
             <li>{{ item }}</li>
         {% endfor %}
-    </ul>
+    </ol>
+    <div id="size-change">
+        <span>Change size:</span> <button onclick="sizeChange(-1)">-</button>&nbsp;<button onclick="sizeChange(1)">+</button>
+    </div>
+    <script type="text/javascript">
+        var sizeChange = function(delta) {
+            var fontRegex = /font-size:\s*(\d*)px/;
+            var body = document.getElementsByTagName("body")[0];
+            var style = body.getAttribute("style");
+            var fontsize = parseInt(style.match(fontRegex)[1]) + delta;
+            body.setAttribute("style", style.replace(fontRegex, "font-size: " + fontsize + "px"));
+        }
+    </script>
 </body>
