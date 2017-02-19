@@ -70,8 +70,6 @@ def regenerate_from_json():
 parser = argparse.ArgumentParser()
 parser.add_argument('-u', '--url', default=None,
                     help='URL to retrieve recipe from.')
-
-# TODO: Need to make this not be an argument but just a single flag
 parser.add_argument("--regen-json", dest='regen_json', action='store_true',
                     help='Regenerate all HTML files from json files')
 parser.set_defaults(regen_json=False)
