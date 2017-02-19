@@ -39,8 +39,37 @@
         }
 
         button {
-            font-size:18px;
-            /*TODO: Make buttons prettier */
+            background: #40e0d0;
+            background-image: -webkit-linear-gradient(top, #40e0d0, #38c2b4);
+            background-image: -moz-linear-gradient(top, #40e0d0, #38c2b4);
+            background-image: -ms-linear-gradient(top, #40e0d0, #38c2b4);
+            background-image: -o-linear-gradient(top, #40e0d0, #38c2b4);
+            background-image: linear-gradient(to bottom, #40e0d0, #38c2b4);
+            -webkit-border-radius: 9;
+            -moz-border-radius: 9;
+            border-radius: 9px;
+            font-family: Arial;
+            color: #ffffff;
+            font-size: 18px;
+            padding: 3px 10px 3px 10px;
+            text-decoration: none;
+            border:none;
+            width:30px;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        button:hover {
+            background: #3cb0fd;
+            background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+            background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+            background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+            background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+            background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+            text-decoration: none;
+            border:none;
         }
 
         @media print {
@@ -50,7 +79,7 @@
         }
     </style>
 </head>
-<body>
+<body style="font-size:16px;">
 <h1>{{ title }}</h1>
     <ul>
         {% for item in ingredients %}
