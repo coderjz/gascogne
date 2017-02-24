@@ -1,8 +1,12 @@
 #VIM Swap files
 *.swp
 
-#Ourpur directory made by the program
+#Default outputs made by the program
 output/
+data.json
+
+#Some file added by mac
+.DS_Store
 
 #Below taken from Git repository
 #https://github.com/github/gitignore/blob/master/Python.gitignore
