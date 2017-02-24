@@ -71,7 +71,8 @@ parser.set_defaults(regen_json=False)
 args = parser.parse_args()
 
 
-inter_file.file_path = args.intermediate_file
+if args.intermediate_file is not None:
+    inter_file.file_path
 
 if args.regen_json is not False:
     regenerate_from_json()
