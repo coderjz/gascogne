@@ -5,13 +5,13 @@ from util import write_file
 
 class IntermediateFile:
     def __init__(self):
-        self.filePath = "data.json"
+        self.file_path = "data.json"
 
     def get_contents(self):
-        if not os.path.isfile(self.filePath):
+        if not os.path.isfile(self.file_path):
             return []
 
-        with open(self.filePath) as data_file:
+        with open(self.file_path) as data_file:
             return json.load(data_file)
 
     # Adds a new recipe to our intermediate file
@@ -21,4 +21,4 @@ class IntermediateFile:
         recipes = [r for r in recipes if r["filename"] != new_recipe["filename"]]
         recipes.append(new_recipe)
 
-        write_file(self.filePath, json.dumps(recipes))
+        write_file(self.file_path, json.dumps(recipes))

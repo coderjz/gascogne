@@ -65,8 +65,13 @@ parser.add_argument('-u', '--url', default=None,
                     help='URL to retrieve recipe from.')
 parser.add_argument("--regen-json", dest='regen_json', action='store_true',
                     help='Regenerate all HTML files from json files')
+parser.add_argument('-i', '--intermediate_file', default=None,
+                    help='Location of the intermediate file to use')
 parser.set_defaults(regen_json=False)
 args = parser.parse_args()
+
+
+inter_file.file_path = args.intermediate_file
 
 if args.regen_json is not False:
     regenerate_from_json()
