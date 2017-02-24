@@ -67,12 +67,16 @@ parser.add_argument("--regen-json", dest='regen_json', action='store_true',
                     help='Regenerate all HTML files from json files')
 parser.add_argument('-i', '--intermediate_file', default=None,
                     help='Location of the intermediate file to use')
+parser.add_argument('-o', '--output_dir', default=None,
+                    help='Location to output the HTML files')
 parser.set_defaults(regen_json=False)
 args = parser.parse_args()
 
 
 if args.intermediate_file is not None:
     inter_file.file_path
+if args.output_dir is not None:
+    html_dir = os.path.normpath(args.output_dir)
 
 if args.regen_json is not False:
     regenerate_from_json()
