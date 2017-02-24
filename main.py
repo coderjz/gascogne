@@ -56,7 +56,7 @@ def generate_from_url(url):
 def regenerate_from_json():
     recipes = inter_file.get_contents()
     for r in recipes:
-        write_file(os.path.join(html_dir, r.filename), get_html(r))
+        write_file(os.path.join(html_dir, r["filename"]), get_html(r))
 
 
 # Manage the command line arguments
