@@ -1,6 +1,6 @@
+# Selects the appropriate class for the recipe and returns that object
 import Sites
 from urllib.parse import urlparse
-# Selects the appropriate class for the recipe and returns that object
 
 
 class SiteSelector:

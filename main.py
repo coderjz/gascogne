@@ -1,31 +1,23 @@
 import re
 import requests
 import os
-import json
 import sys
 from datetime import datetime
 from bs4 import BeautifulSoup
 from SiteSelector import SiteSelector
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import argparse
+from IntermediateFile import IntermediateFile
+from util import write_file
 
-json_dir = os.path.join("output", "json")
+json_file = "data.json"
 html_dir = os.path.join("output", "html")
+inter_file = IntermediateFile()
 
 
 def get_filename(site, title):
-    return re.sub('[^a-zA-Z ]+', '', title) + "_" + site.get_short_name()
-
-
-def write_file(filename, contents, extension, dir):
-    if extension:
-        filename += "." + extension
-
-    if not os.path.exists(dir):
-        os.makedirs(dir)
-
-    with open(os.path.join(dir, filename), "w", encoding="utf-8") as file:
-        file.write(contents)
+    return re.sub('[^a-zA-Z ]+', '', title) + "_" + \
+           site.get_short_name() + ".html"
 
 
 def get_html(recipe):
@@ -46,27 +38,28 @@ def generate_from_url(url):
     if(response.status_code == 200):
         site = SiteSelector().get_site(url)
         soup = BeautifulSoup(response.text, 'html.parser')
+        title = site.get_title(soup)
+        fname = get_filename(site, title)
         obj = {
-            "title": site.get_title(soup),
+            "title": title,
             "ingredients": site.get_ingredients(soup),
             "directions": site.get_directions(soup),
             "url": url,
+            "filename": fname,
             "date_retrieved": datetime.now().strftime("%Y-%m-%d")
         }
-        fname = get_filename(site, obj["title"])
-        write_file(fname, json.dumps(obj), "json", json_dir)
-        write_file(fname, get_html(obj), "html", html_dir)
+        inter_file.add_recipe(obj)
+        write_file(os.path.join(html_dir, fname), get_html(obj))
 
 
 # Read all JSON files and regenerate the HTML files
 def regenerate_from_json():
-    for filename in os.listdir(json_dir):
-        with open(os.path.join(json_dir, filename)) as data_file:
-            data = json.load(data_file)
-            fileNameNoExt = os.path.splitext(filename)[0]
-            write_file(fileNameNoExt, get_html(data), "html", html_dir)
+    recipes = inter_file.get_contents()
+    for r in recipes:
+        write_file(os.path.join(html_dir, r.filename), get_html(r))
 
 
+# Manage the command line arguments
 parser = argparse.ArgumentParser()
 parser.add_argument('-u', '--url', default=None,
                     help='URL to retrieve recipe from.')
