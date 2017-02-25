@@ -99,32 +99,41 @@ def regenerate_from_json():
 
 
 # Manage the command line arguments
-parser = argparse.ArgumentParser()
-parser.add_argument('-u', '--url', default=None,
-                    help='URL to retrieve recipe from.')
-parser.add_argument('-f', '--file', default=None,
-                    help='File to retrieve recipe from.')
-parser.add_argument("--regen-json", dest='regen_json', action='store_true',
-                    help='Regenerate all HTML files from json files')
-parser.add_argument('-i', '--intermediate_file', default=None,
-                    help='Location of the intermediate file to use')
-parser.add_argument('-o', '--output_dir', default=None,
-                    help='Location to output the HTML files')
-parser.set_defaults(regen_json=False)
-args = parser.parse_args()
+def create_parser():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-u', '--url', default=None,
+                        help='URL to retrieve recipe from.')
+    parser.add_argument('-f', '--file', default=None,
+                        help='File to retrieve recipe from.')
+    parser.add_argument("--regen-json", dest='regen_json', action='store_true',
+                        help='Regenerate all HTML files from json files')
+    parser.add_argument('-i', '--intermediate_file', default=None,
+                        help='Location of the intermediate file to use')
+    parser.add_argument('-o', '--output_dir', default=None,
+                        help='Location to output the HTML files')
+    parser.set_defaults(regen_json=False)
+    return parser
 
 
-if args.intermediate_file is not None:
-    inter_file.file_path
-if args.output_dir is not None:
-    html_dir = os.path.normpath(args.output_dir)
+def run_main(args):
+    global html_dir
+    if args.intermediate_file is not None:
+        inter_file.file_path = args.intermediate_file
+    if args.output_dir is not None:
+        html_dir = os.path.normpath(args.output_dir)
 
-if args.regen_json is not False:
-    regenerate_from_json()
-elif args.url is not None:
-    generate_from_url(args.url)
-elif args.file is not None:
-    generate_from_file(args.file)
-else:
-    print("Must add valid arguments.  Exiting.")
-    sys.exit()
+    if args.regen_json is not False:
+        regenerate_from_json()
+    elif args.url is not None:
+        generate_from_url(args.url)
+    elif args.file is not None:
+        generate_from_file(args.file)
+    else:
+        print("Must add valid arguments.  Exiting.")
+        sys.exit()
+
+
+if __name__ == "__main__":
+    parser = create_parser()
+    args = parser.parse_args()
+    run_main(args)
