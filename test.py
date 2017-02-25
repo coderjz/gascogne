@@ -44,7 +44,7 @@ class MainTestCase(CommandLineTestCase):
     def test_download_default_URL(self):
         url = 'https://food52.com/recipes/9743-roasted-carrot-soup'
         args = self.parser.parse_args(['-u', url])
-        run_main(args)
+        run_main(self.parser, args)
 
         data_file = 'data.json'
         html_file = 'output/html/Roasted CarrotSoup_F52.html'
@@ -57,7 +57,7 @@ class MainTestCase(CommandLineTestCase):
 
         url = 'https://food52.com/recipes/64163-roasted-veggie-ciabatta-sandwich-gluten-free'
         args = self.parser.parse_args(['-u', url])
-        run_main(args)
+        run_main(self.parser, args)
 
         html_file = 'output/html/Roasted Veggie Ciabatta Sandwich  GlutenFree_F52.html'
         self.assertTrue(os.path.isfile(html_file))
@@ -68,7 +68,7 @@ class MainTestCase(CommandLineTestCase):
     def test_download_different_intermediate_file(self):
         url = 'https://food52.com/recipes/9743-roasted-carrot-soup'
         args = self.parser.parse_args(['-u', url, "-i", "tmp_zz/data2.json"])
-        run_main(args)
+        run_main(self.parser, args)
 
         data_file = 'tmp_zz/data2.json'
         html_file = 'output/html/Roasted CarrotSoup_F52.html'
@@ -81,7 +81,7 @@ class MainTestCase(CommandLineTestCase):
 
         url = 'https://food52.com/recipes/64163-roasted-veggie-ciabatta-sandwich-gluten-free'
         args = self.parser.parse_args(['-u', url, "-i", "tmp_zz/data2.json"])
-        run_main(args)
+        run_main(self.parser, args)
 
         html_file = 'output/html/Roasted Veggie Ciabatta Sandwich  GlutenFree_F52.html'
         self.assertTrue(os.path.isfile(html_file))
@@ -95,7 +95,7 @@ class MainTestCase(CommandLineTestCase):
     def test_download_different_output_directory(self):
         url = 'https://food52.com/recipes/9743-roasted-carrot-soup'
         args = self.parser.parse_args(['-u', url, "-o", "output/html2"])
-        run_main(args)
+        run_main(self.parser, args)
 
         data_file = 'data.json'
         html_file = 'output/html2/Roasted CarrotSoup_F52.html'
@@ -108,7 +108,7 @@ class MainTestCase(CommandLineTestCase):
 
         url = 'https://food52.com/recipes/64163-roasted-veggie-ciabatta-sandwich-gluten-free'
         args = self.parser.parse_args(['-u', url, "-o", "output/html2"])
-        run_main(args)
+        run_main(self.parser, args)
 
         html_file = 'output/html2/Roasted Veggie Ciabatta Sandwich  GlutenFree_F52.html'
         self.assertTrue(os.path.isfile(html_file))
@@ -121,16 +121,16 @@ class MainTestCase(CommandLineTestCase):
         # These urls already tested
         url = 'https://food52.com/recipes/9743-roasted-carrot-soup'
         args = self.parser.parse_args(['-u', url])
-        run_main(args)
+        run_main(self.parser, args)
 
         url = 'https://food52.com/recipes/64163-roasted-veggie-ciabatta-sandwich-gluten-free'
         args = self.parser.parse_args(['-u', url])
-        run_main(args)
+        run_main(self.parser, args)
 
         shutil.rmtree("output")
 
         args = self.parser.parse_args(["--regen-json"])
-        run_main(args)
+        run_main(self.parser, args)
 
         html_file = 'output/html/Roasted Veggie Ciabatta Sandwich  GlutenFree_F52.html'
         html_dir = 'output/html'
@@ -140,7 +140,7 @@ class MainTestCase(CommandLineTestCase):
 
         # Test regen json with different output directory
         args = self.parser.parse_args(['--regen-json', "-o", "output/html2"])
-        run_main(args)
+        run_main(self.parser, args)
 
         html_file = 'output/html2/Roasted Veggie Ciabatta Sandwich  GlutenFree_F52.html'
         html_dir = 'output/html2'

@@ -101,12 +101,14 @@ def regenerate_from_json():
 # Manage the command line arguments
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-u', '--url', default=None,
-                        help='URL to retrieve recipe from.')
-    parser.add_argument('-f', '--file', default=None,
-                        help='File to retrieve recipe from.')
-    parser.add_argument("--regen-json", dest='regen_json', action='store_true',
-                        help='Regenerate all HTML files from json files')
+    command_group = parser.add_mutually_exclusive_group()
+    command_group.add_argument('-u', '--url', default=None,
+                               help='URL to retrieve recipe from.')
+    command_group.add_argument('-f', '--file', default=None,
+                               help='File to retrieve recipe from.')
+    command_group.add_argument("--regen-json", dest='regen_json',
+                               action='store_true',
+                               help='Regenerate all HTML files from json files')
     parser.add_argument('-i', '--intermediate_file', default=None,
                         help='Location of the intermediate file to use')
     parser.add_argument('-o', '--output_dir', default=None,
@@ -118,7 +120,7 @@ def create_parser():
 # Runs the application based on the passed in arguments
 # While should run only once from command line, the unit tests
 # will run this multiple times, so we must always reset all arguments each time.
-def run_main(args):
+def run_main(parser, args):
     global html_dir
     if args.intermediate_file is not None:
         inter_file.file_path = args.intermediate_file
@@ -137,11 +139,11 @@ def run_main(args):
     elif args.file is not None:
         generate_from_file(args.file)
     else:
-        print("Must add valid arguments.  Exiting.")
+        parser.print_help()
         sys.exit()
 
 
 if __name__ == "__main__":
     parser = create_parser()
     args = parser.parse_args()
-    run_main(args)
+    run_main(parser, args)
