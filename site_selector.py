@@ -1,11 +1,11 @@
 # Selects the appropriate class for the recipe and returns that object
-import Sites
+import sites
 from urllib.parse import urlparse
 
 
 class SiteSelector:
     def __init__(self):
-        self.sites = [Sites.Food52()]
+        self.sites = [sites.Food52()]
 
     def _does_domain_match(self, url, domain):
         url_domain = urlparse(url).netloc

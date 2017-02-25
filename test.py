@@ -2,7 +2,7 @@ from unittest import TestCase
 from main import create_parser, run_main
 import os
 import shutil
-from IntermediateFile import IntermediateFile
+from intermediate_file import IntermediateFile
 
 
 class CommandLineTestCase(TestCase):

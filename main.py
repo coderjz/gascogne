@@ -4,10 +4,10 @@ import os
 import sys
 from datetime import datetime
 from bs4 import BeautifulSoup
-from SiteSelector import SiteSelector
+from site_selector import SiteSelector
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 import argparse
-from IntermediateFile import IntermediateFile
+from intermediate_file import IntermediateFile
 from util import write_file
 
 default_intermediate_file_path = "data.json"
