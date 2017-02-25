@@ -29,6 +29,11 @@ def get_html(recipe):
     return template.render(recipe)
 
 
+def write_recipe_obj(recipe):
+    inter_file.add_recipe(recipe)
+    write_file(os.path.join(html_dir, recipe["filename"]), get_html(recipe))
+
+
 def generate_from_url(url):
     user_agent = ('Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 '
                   '(KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36')
@@ -48,8 +53,42 @@ def generate_from_url(url):
             "filename": fname,
             "date_retrieved": datetime.now().strftime("%Y-%m-%d")
         }
-        inter_file.add_recipe(obj)
-        write_file(os.path.join(html_dir, fname), get_html(obj))
+    write_recipe_obj(obj)
+
+
+def generate_from_file(filename):
+    obj = {
+        "date_retrieved": datetime.now().strftime("%Y-%m-%d")
+    }
+    multi_line_behaviour = ["ingredients", "directions"]
+    single_line_behaviour = ["url", "title"]
+    all_keys = single_line_behaviour + multi_line_behaviour
+    for k in single_line_behaviour:
+        obj[k] = ""
+    for k in multi_line_behaviour:
+        obj[k] = []
+    behaviour = ""
+
+    with open(filename) as f:
+        for line in f:
+            line = line.strip()
+            if line == "":
+                continue
+            elif line.lower() in all_keys:
+                behaviour = line.lower()
+            else:
+                if behaviour in single_line_behaviour:
+                    obj[behaviour] = line
+                    behaviour = ""
+                elif behaviour in multi_line_behaviour:
+                    obj[behaviour].append(line)
+
+    for k in all_keys:
+        if len(obj[k]) == 0:
+            print("Error reading file.  No entry found for " + k)
+
+    obj["filename"] = re.sub('[^a-zA-Z ]+', '', obj["title"]) + "_FILE.html"
+    write_recipe_obj(obj)
 
 
 # Read all JSON files and regenerate the HTML files
@@ -63,6 +102,8 @@ def regenerate_from_json():
 parser = argparse.ArgumentParser()
 parser.add_argument('-u', '--url', default=None,
                     help='URL to retrieve recipe from.')
+parser.add_argument('-f', '--file', default=None,
+                    help='File to retrieve recipe from.')
 parser.add_argument("--regen-json", dest='regen_json', action='store_true',
                     help='Regenerate all HTML files from json files')
 parser.add_argument('-i', '--intermediate_file', default=None,
@@ -81,8 +122,9 @@ if args.output_dir is not None:
 if args.regen_json is not False:
     regenerate_from_json()
 elif args.url is not None:
-    url = args.url
-    generate_from_url(url)
+    generate_from_url(args.url)
+elif args.file is not None:
+    generate_from_file(args.file)
 else:
     print("Must add valid arguments.  Exiting.")
     sys.exit()
