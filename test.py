@@ -2,6 +2,7 @@ from unittest import TestCase
 from main import create_parser, run_main
 import os
 import shutil
+from IntermediateFile import IntermediateFile
 
 
 class CommandLineTestCase(TestCase):
@@ -149,3 +150,27 @@ class MainTestCase(CommandLineTestCase):
         self.assertEqual(5380, self._get_file_length(html_file))
 
         shutil.rmtree(html_dir)
+
+
+    def test_add_from_file(self):
+        filename = "testfiles/recipe.txt"
+        html_dir = 'output/html'
+        html_file = 'output/html/Big crumb coffee cake_FILE.html'
+        data_file = 'data.json'
+        args = self.parser.parse_args(["-f", filename])
+        run_main(self.parser, args)
+
+        #Get the content from the file created from main...
+        inter_file = IntermediateFile()
+        inter_file.file_path = data_file
+        recipe_obj = inter_file.get_contents()[0]
+
+        self.assertEqual(1, self._num_files_in_dir(html_dir))
+        self.assertEqual(2490, self._get_file_length(data_file))
+        self.assertEqual(5942, self._get_file_length(html_file))
+        self.assertEqual("https://smittenkitchen.com/2008/02/big-crumb-coffee-cake/",
+                         recipe_obj["url"])
+        self.assertEqual("Big crumb coffee cake",
+                         recipe_obj["title"])
+        self.assertEqual(21, len(recipe_obj["ingredients"]))
+        self.assertEqual(5, len(recipe_obj["directions"]))
