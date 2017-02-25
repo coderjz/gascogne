@@ -32,6 +32,10 @@
             font-size:18px;
         }
 
+        #container {
+            margin-bottom:50px;
+        }
+
         .line {
             width:100%;
             border-bottom:1px dashed black;
@@ -76,22 +80,28 @@
             #size-change {
                 display: none;
             }
+
+            #container {
+                margin-bottom:0px;
+            }
         }
     </style>
 </head>
 <body style="font-size:16px;">
-<h1>{{ title }}</h1>
-    <ul>
-        {% for item in ingredients %}
-            <li>{{ item }}</li>
-        {% endfor %}
-    </ul>
-<hr>
-    <ol>
-        {% for item in directions %}
-            <li>{{ item }}</li>
-        {% endfor %}
-    </ol>
+    <div id="container">
+        <h1>{{ title }}</h1>
+            <ul>
+                {% for item in ingredients %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ul>
+        <hr>
+            <ol>
+                {% for item in directions %}
+                    <li>{{ item }}</li>
+                {% endfor %}
+            </ol>
+    </div>
     <div id="size-change">
         <span>Change size:</span> <button onclick="sizeChange(-1)">-</button>&nbsp;<button onclick="sizeChange(1)">+</button>
     </div>
