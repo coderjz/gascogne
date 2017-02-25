@@ -10,8 +10,8 @@ import argparse
 from IntermediateFile import IntermediateFile
 from util import write_file
 
-json_file = "data.json"
-html_dir = os.path.join("output", "html")
+default_intermediate_file_path = "data.json"
+default_html_dir = os.path.join("output", "html")
 inter_file = IntermediateFile()
 
 
@@ -115,12 +115,20 @@ def create_parser():
     return parser
 
 
+# Runs the application based on the passed in arguments
+# While should run only once from command line, the unit tests
+# will run this multiple times, so we must always reset all arguments each time.
 def run_main(args):
     global html_dir
     if args.intermediate_file is not None:
         inter_file.file_path = args.intermediate_file
+    else:
+        inter_file.file_path = default_intermediate_file_path
+
     if args.output_dir is not None:
         html_dir = os.path.normpath(args.output_dir)
+    else:
+        html_dir = default_html_dir
 
     if args.regen_json is not False:
         regenerate_from_json()

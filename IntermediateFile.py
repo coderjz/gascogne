@@ -4,9 +4,6 @@ import os
 from util import write_file
 
 class IntermediateFile:
-    def __init__(self):
-        self.file_path = "data.json"
-
     def get_contents(self):
         if not os.path.isfile(self.file_path):
             return []
