@@ -10,8 +10,6 @@ import argparse
 from intermediate_file import IntermediateFile
 from util import write_file
 
-default_intermediate_file_path = "data.json"
-default_html_dir = os.path.join("output", "html")
 inter_file = IntermediateFile()
 
 
@@ -21,8 +19,10 @@ def get_filename(site, title):
 
 
 def get_html(recipe):
+    this_dir = os.path.dirname(os.path.abspath(__file__))
+    template_dir = os.path.join(this_dir, 'templates')
     env = Environment(
-        loader=FileSystemLoader('templates'),
+        loader=FileSystemLoader(template_dir),
         autoescape=select_autoescape(['html', 'xml'])
     )
     template = env.get_template('main.html')
@@ -122,15 +122,16 @@ def create_parser():
 # will run this multiple times, so we must always reset all arguments each time.
 def run_main(parser, args):
     global html_dir
+    this_dir = os.path.dirname(os.path.abspath(__file__))
     if args.intermediate_file is not None:
         inter_file.file_path = args.intermediate_file
-    else:
-        inter_file.file_path = default_intermediate_file_path
+    else:  # Default path
+        inter_file.file_path = os.path.join(this_dir, "data.json")
 
     if args.output_dir is not None:
         html_dir = os.path.normpath(args.output_dir)
-    else:
-        html_dir = default_html_dir
+    else:  # Default dir
+        html_dir = os.path.join(this_dir, "output/html")
 
     if args.regen_json is not False:
         regenerate_from_json()
