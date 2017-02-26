@@ -24,6 +24,7 @@ class MainTestCase(CommandLineTestCase):
             os.rename("output", "outputbak")
 
     # Move the "backup" folder back to the default outputs
+    # Remove temp folders (do it here in case test fails!)
     def tearDown(self):
         if(os.path.isfile("data.json")):
             os.remove("data.json")
@@ -33,6 +34,9 @@ class MainTestCase(CommandLineTestCase):
             os.rename("data.json.bak", "data.json")
         if(os.path.isdir("outputbak")):
             os.rename("outputbak", "output")
+
+        if(os.path.isdir("tmp_zz")):
+            shutil.rmtree("tmp_zz")
 
     def _num_files_in_dir(self, dir):
         return len([name for name in os.listdir(dir) if
@@ -91,7 +95,6 @@ class MainTestCase(CommandLineTestCase):
         self.assertEqual(6003, self._get_file_length(html_file))
 
         self.assertFalse(os.path.isfile("data.json"))
-        shutil.rmtree("tmp_zz")
 
     def test_download_different_output_directory(self):
         url = 'https://food52.com/recipes/9743-roasted-carrot-soup'
