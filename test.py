@@ -42,10 +42,6 @@ class MainTestCase(CommandLineTestCase):
         return len([name for name in os.listdir(dir) if
                     os.path.isfile(os.path.join(dir, name))])
 
-    def _get_file_length(self, filename):
-        with open(filename, "r", encoding="utf-8") as file:
-            return len(file.read())
-
     def test_download_default_URL(self):
         url = 'https://food52.com/recipes/9743-roasted-carrot-soup'
         args = self.parser.parse_args(['-u', url])
@@ -57,8 +53,6 @@ class MainTestCase(CommandLineTestCase):
         self.assertTrue(os.path.isfile(data_file))
         self.assertTrue(os.path.isfile(html_file))
         self.assertEqual(1, self._num_files_in_dir(html_dir))
-        self.assertEqual(1602, self._get_file_length(data_file))
-        self.assertEqual(5203, self._get_file_length(html_file))
 
         url = 'https://food52.com/recipes/64163-roasted-veggie-ciabatta-sandwich-gluten-free'
         args = self.parser.parse_args(['-u', url])
@@ -67,8 +61,6 @@ class MainTestCase(CommandLineTestCase):
         html_file = 'output/html/Roasted Veggie Ciabatta Sandwich  GlutenFree_F52.html'
         self.assertTrue(os.path.isfile(html_file))
         self.assertEqual(2, self._num_files_in_dir(html_dir))
-        self.assertEqual(3653, self._get_file_length(data_file))
-        self.assertEqual(6003, self._get_file_length(html_file))
 
     def test_download_different_intermediate_file(self):
         url = 'https://food52.com/recipes/9743-roasted-carrot-soup'
@@ -81,8 +73,6 @@ class MainTestCase(CommandLineTestCase):
         self.assertTrue(os.path.isfile(data_file))
         self.assertTrue(os.path.isfile(html_file))
         self.assertEqual(1, self._num_files_in_dir(html_dir))
-        self.assertEqual(1602, self._get_file_length(data_file))
-        self.assertEqual(5203, self._get_file_length(html_file))
 
         url = 'https://food52.com/recipes/64163-roasted-veggie-ciabatta-sandwich-gluten-free'
         args = self.parser.parse_args(['-u', url, "-i", "tmp_zz/data2.json"])
@@ -91,8 +81,6 @@ class MainTestCase(CommandLineTestCase):
         html_file = 'output/html/Roasted Veggie Ciabatta Sandwich  GlutenFree_F52.html'
         self.assertTrue(os.path.isfile(html_file))
         self.assertEqual(2, self._num_files_in_dir(html_dir))
-        self.assertEqual(3653, self._get_file_length(data_file))
-        self.assertEqual(6003, self._get_file_length(html_file))
 
         self.assertFalse(os.path.isfile("data.json"))
 
@@ -107,8 +95,6 @@ class MainTestCase(CommandLineTestCase):
         self.assertTrue(os.path.isfile(data_file))
         self.assertTrue(os.path.isfile(html_file))
         self.assertEqual(1, self._num_files_in_dir(html_dir))
-        self.assertEqual(1602, self._get_file_length(data_file))
-        self.assertEqual(5203, self._get_file_length(html_file))
 
         url = 'https://food52.com/recipes/64163-roasted-veggie-ciabatta-sandwich-gluten-free'
         args = self.parser.parse_args(['-u', url, "-o", "output/html2"])
@@ -117,8 +103,6 @@ class MainTestCase(CommandLineTestCase):
         html_file = 'output/html2/Roasted Veggie Ciabatta Sandwich  GlutenFree_F52.html'
         self.assertTrue(os.path.isfile(html_file))
         self.assertEqual(2, self._num_files_in_dir(html_dir))
-        self.assertEqual(3653, self._get_file_length(data_file))
-        self.assertEqual(6003, self._get_file_length(html_file))
 
 
     def test_download_and_regen_json(self):
@@ -140,7 +124,6 @@ class MainTestCase(CommandLineTestCase):
         html_dir = 'output/html'
         self.assertTrue(os.path.isfile(html_file))
         self.assertEqual(2, self._num_files_in_dir(html_dir))
-        self.assertEqual(6003, self._get_file_length(html_file))
 
         # Test regen json with different output directory
         args = self.parser.parse_args(['--regen-json', "-o", "output/html2"])
@@ -150,7 +133,6 @@ class MainTestCase(CommandLineTestCase):
         html_dir = 'output/html2'
         self.assertTrue(os.path.isfile(html_file))
         self.assertEqual(2, self._num_files_in_dir(html_dir))
-        self.assertEqual(6003, self._get_file_length(html_file))
 
         shutil.rmtree(html_dir)
 
@@ -169,11 +151,10 @@ class MainTestCase(CommandLineTestCase):
         recipe_obj = inter_file.get_contents()[0]
 
         self.assertEqual(1, self._num_files_in_dir(html_dir))
-        self.assertEqual(2490, self._get_file_length(data_file))
-        self.assertEqual(6597, self._get_file_length(html_file))
         self.assertEqual("https://smittenkitchen.com/2008/02/big-crumb-coffee-cake/",
                          recipe_obj["url"])
         self.assertEqual("Big crumb coffee cake",
                          recipe_obj["title"])
         self.assertEqual(21, len(recipe_obj["ingredients"]))
         self.assertEqual(5, len(recipe_obj["directions"]))
+        self.assertTrue(os.path.isfile(html_file))
