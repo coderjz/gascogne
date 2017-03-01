@@ -3,6 +3,7 @@ import json
 import os
 from util import write_file
 
+
 class IntermediateFile:
     def get_contents(self):
         if not os.path.isfile(self.file_path):
@@ -18,4 +19,5 @@ class IntermediateFile:
         recipes = [r for r in recipes if r["filename"] != new_recipe["filename"]]
         recipes.append(new_recipe)
 
-        write_file(self.file_path, json.dumps(recipes))
+        write_file(self.file_path,
+                   json.dumps(recipes, indent=4, sort_keys=True))

@@ -76,6 +76,10 @@
             border:none;
         }
 
+        .note {
+            margin-top:5px;
+        }
+
         @media print {
             #size-change {
                 display: none;
@@ -101,6 +105,9 @@
                     <li>{{ item }}</li>
                 {% endfor %}
             </ol>
+            {% if note != "" %}
+                <p class="note">Note: <i>{{ note }}</i></p>
+            {% endif %}
     </div>
     <div id="size-change">
         <span>Change size:</span> <button onclick="sizeChange(-1)">-</button>&nbsp;<button onclick="sizeChange(1)">+</button>

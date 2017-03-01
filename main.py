@@ -51,7 +51,8 @@ def generate_from_url(url):
             "directions": site.get_directions(soup),
             "url": url,
             "filename": fname,
-            "date_retrieved": datetime.now().strftime("%Y-%m-%d")
+            "date_retrieved": datetime.now().strftime("%Y-%m-%d"),
+            "note": ""
         }
     write_recipe_obj(obj)
 
@@ -61,7 +62,7 @@ def generate_from_file(filename):
         "date_retrieved": datetime.now().strftime("%Y-%m-%d")
     }
     multi_line_behaviour = ["ingredients", "directions"]
-    single_line_behaviour = ["url", "title"]
+    single_line_behaviour = ["url", "title", "note"]
     all_keys = single_line_behaviour + multi_line_behaviour
     for k in single_line_behaviour:
         obj[k] = ""
@@ -123,6 +124,7 @@ def create_parser():
 def run_main(parser, args):
     global html_dir
     this_dir = os.path.dirname(os.path.abspath(__file__))
+
     if args.intermediate_file is not None:
         inter_file.file_path = args.intermediate_file
     else:  # Default path
