@@ -17,5 +17,7 @@ class SiteSelector:
         if len(matches) == 1:
             return matches[0]
         else:
-            raise Exception("Found " + len(matches) + " matches." +
-                            "Expected 1 match.  For URL " + url)
+            raise Exception("Found " + str(len(matches)) +
+                            " sites that support the URL.  Can only download" +
+                            " the recipe if exactly 1 site supports the URL." +
+                            " URL: " + url)

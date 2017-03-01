@@ -135,15 +135,18 @@ def run_main(parser, args):
     else:  # Default dir
         html_dir = os.path.join(this_dir, "output/html")
 
-    if args.regen_json is not False:
-        regenerate_from_json()
-    elif args.url is not None:
-        generate_from_url(args.url)
-    elif args.file is not None:
-        generate_from_file(args.file)
-    else:
-        parser.print_help()
-        sys.exit()
+    try:
+        if args.regen_json is not False:
+            regenerate_from_json()
+        elif args.url is not None:
+            generate_from_url(args.url)
+        elif args.file is not None:
+            generate_from_file(args.file)
+        else:
+            parser.print_help()
+            sys.exit()
+    except Exception as err:
+        print(err)
 
 
 if __name__ == "__main__":
