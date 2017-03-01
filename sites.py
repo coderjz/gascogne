@@ -22,3 +22,24 @@ class Food52:
     def get_directions(self, soup):
         return [elem.get_text().strip()
                 for elem in soup.select("li[itemprop=recipeInstructions]")]
+
+
+class FoodNetwork:
+    def get_domain(self):
+        return "foodnetwork.com"
+
+    def get_short_name(self):
+        return "FNET"
+
+    def get_title(self, soup):
+        return soup.select_one(".o-AssetTitle__a-Headline").get_text()
+
+    def get_ingredients(self, soup):
+        return [elem.get_text().strip()
+                for elem in soup.select(".o-Ingredients__a-ListItemText")]
+
+    def get_directions(self, soup):
+        invalid_direction = "Watch how to make this recipe."
+        return [elem.get_text().strip()
+                for elem in soup.select(".o-Method__m-Body p")
+                if elem.get_text().strip() != invalid_direction]
