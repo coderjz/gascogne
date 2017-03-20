@@ -43,3 +43,22 @@ class FoodNetwork:
         return [elem.get_text().strip()
                 for elem in soup.select(".o-Method__m-Body p")
                 if elem.get_text().strip() != invalid_direction]
+
+
+class BBCGoodFood:
+    def get_domain(self):
+        return "bbcgoodfood.com"
+
+    def get_short_name(self):
+        return "BBCGOOD"
+
+    def get_title(self, soup):
+        return soup.select_one(".recipe-header__title").get_text().strip()
+
+    def get_ingredients(self, soup):
+        return [elem.get_text().strip()
+                for elem in soup.select(".ingredients-list__item")]
+
+    def get_directions(self, soup):
+        return [elem.get_text().strip()
+                for elem in soup.select(".method__item p")]
