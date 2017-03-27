@@ -56,8 +56,13 @@ class BBCGoodFood:
         return soup.select_one(".recipe-header__title").get_text().strip()
 
     def get_ingredients(self, soup):
-        return [elem.get_text().strip()
-                for elem in soup.select(".ingredients-list__item")]
+        ing = [" ".join((a.string or "").strip() for a in e.contents).strip()
+               for e in soup.find_all("li", {"class": "ingredients-list__item"})
+               ]
+
+        # TODO: Make this replace, strip() call, other character substitutio
+        # be part of a dedicated "cleaning" method used by the parent of this.
+        return [i.replace(" ,", ",") for i in ing]
 
     def get_directions(self, soup):
         return [elem.get_text().strip()
