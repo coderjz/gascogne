@@ -40,21 +40,39 @@ def generate_from_url(url):
     headers = {'User-Agent': user_agent}
 
     response = requests.get(url, headers=headers)
-    if(response.status_code == 200):
-        site = SiteSelector().get_site(url)
-        soup = BeautifulSoup(response.text, 'html.parser')
-        title = site.get_title(soup)
-        fname = get_filename(site, title)
-        obj = {
-            "title": title,
-            "ingredients": site.get_ingredients(soup),
-            "directions": site.get_directions(soup),
-            "url": url,
-            "filename": fname,
-            "date_retrieved": datetime.now().strftime("%Y-%m-%d"),
-            "note": ""
-        }
+    if(response.status_code != 200):
+        print("Error retrieving URL.  Status Code: " + response.status_code)
+        return
+
+    site = SiteSelector().get_site(url)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    title = site.get_title(soup)
+    fname = get_filename(site, title)
+    obj = {
+        "title": title,
+        "ingredients": site.get_ingredients(soup),
+        "directions": site.get_directions(soup),
+        "url": url,
+        "filename": fname,
+        "date_retrieved": datetime.now().strftime("%Y-%m-%d"),
+        "note": ""
+    }
+
+    clean_recipe_object(obj)
     write_recipe_obj(obj)
+
+
+# Put common cleanup rules for all recipes in one place
+def clean_recipe_object(recipe):
+    def cleanstr(s):
+        s = re.sub("\s\s+", " ", s)  # Merge multiple whitespace into one psace
+        s = re.sub("\s+,", ",", s)   # Remove all spaces before comma
+        return s.strip()
+
+    recipe["title"] = cleanstr(recipe["title"])
+    recipe["note"] = cleanstr(recipe["note"])
+    recipe["ingredients"] = [cleanstr(i) for i in recipe["ingredients"]]
+    recipe["directions"] = [cleanstr(d) for d in recipe["directions"]]
 
 
 def generate_from_file(filename):
@@ -89,6 +107,7 @@ def generate_from_file(filename):
             print("Error reading file.  No entry found for " + k)
 
     obj["filename"] = re.sub('[^a-zA-Z ]+', '', obj["title"]) + "_FILE.html"
+    clean_recipe_object(obj)
     write_recipe_obj(obj)
 
 

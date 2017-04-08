@@ -1,5 +1,8 @@
+# Allow long lines for test file
+# pylama:ignore=E501
+
 from unittest import TestCase
-from main import create_parser, run_main
+from main import create_parser, run_main, clean_recipe_object
 import os
 import shutil
 from intermediate_file import IntermediateFile
@@ -104,7 +107,6 @@ class MainTestCase(CommandLineTestCase):
         self.assertTrue(os.path.isfile(html_file))
         self.assertEqual(2, self._num_files_in_dir(html_dir))
 
-
     def test_download_and_regen_json(self):
         # These urls already tested
         url = 'https://food52.com/recipes/9743-roasted-carrot-soup'
@@ -136,7 +138,6 @@ class MainTestCase(CommandLineTestCase):
 
         shutil.rmtree(html_dir)
 
-
     def test_add_from_file(self):
         filename = "testfiles/recipe.txt"
         html_dir = 'output/html'
@@ -145,7 +146,7 @@ class MainTestCase(CommandLineTestCase):
         args = self.parser.parse_args(["-f", filename])
         run_main(self.parser, args)
 
-        #Get the content from the file created from main...
+        # Get the content from the file created from main...
         inter_file = IntermediateFile()
         inter_file.file_path = data_file
         recipe_obj = inter_file.get_contents()[0]
@@ -158,3 +159,24 @@ class MainTestCase(CommandLineTestCase):
         self.assertEqual(21, len(recipe_obj["ingredients"]))
         self.assertEqual(5, len(recipe_obj["directions"]))
         self.assertTrue(os.path.isfile(html_file))
+
+    def test_clean_recipe_obj(self):
+        obj = {
+            "title": " Title",
+            "ingredients": ["Ingredient 1", "Ingredient 2  ",
+                            "  Ingredient  3 "],
+            "directions":  ["  Direction ,  chop  ,  eat  ,  1 "],
+            "url": "fake",
+            "filename": "fake",
+            "date_retrieved": "fake",
+            "note": "   C is for cookie.. and cookie is for me  "
+        }
+
+        clean_recipe_object(obj)
+
+        self.assertEqual(obj["title"], "Title")
+        self.assertEqual(obj["ingredients"][0], "Ingredient 1")
+        self.assertEqual(obj["ingredients"][1], "Ingredient 2")
+        self.assertEqual(obj["ingredients"][2], "Ingredient 3")
+        self.assertEqual(obj["directions"][0], "Direction, chop, eat, 1")
+        self.assertEqual(obj["note"], "C is for cookie.. and cookie is for me")

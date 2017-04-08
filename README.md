@@ -14,3 +14,7 @@ python main.py -u _URL_
 python main.py -f _FILE_
 * Reads the recipe from a file and saves it as an HTML file with the same content as if downloaded from a URL.  Use this for sites that don't support automatic HTML downloading.
 * For an example file, see: https://github.com/coderjz/gascogne/blob/master/testfiles/recipe.txt
+
+## Testing
+A few tests are in the test.py file.  Use the command:
+python -m unittest test.py
