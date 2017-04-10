@@ -5,7 +5,8 @@ from urllib.parse import urlparse
 
 class SiteSelector:
     def __init__(self):
-        self.sites = [sites.Food52(), sites.FoodNetwork(), sites.BBCGoodFood()]
+        self.sites = [sites.Food52(), sites.FoodNetwork(), sites.BBCGoodFood(),
+                      sites.SmittenKitchen()]
 
     def _does_domain_match(self, url, domain):
         url_domain = urlparse(url).netloc

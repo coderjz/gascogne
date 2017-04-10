@@ -1,7 +1,6 @@
 # This file contains a class for each different site we can pull recipes from.
 # The class/site to use is selected based on the get_domain function.
 
-
 class Food52:
     def get_domain(self):
         return "food52.com"
@@ -63,3 +62,29 @@ class BBCGoodFood:
     def get_directions(self, soup):
         return [elem.get_text().strip()
                 for elem in soup.select(".method__item p")]
+
+
+class SmittenKitchen:
+    def get_domain(self):
+        return "smittenkitchen.com"
+
+    def get_short_name(self):
+        return "SK"
+
+    def get_title(self, soup):
+        return soup.select_one(".jetpack-recipe-title").get_text()
+
+    def get_ingredients(self, soup):
+        return [i.get_text() for i in soup.select(".jetpack-recipe-ingredient")]
+
+    def get_directions(self, soup):
+        #First direction is properly under a class element
+        dir1 = soup.select_one(".jetpack-recipe-directions").get_text()
+
+        #All other directions are direct children of the root, not under <html>
+        dir2 = [elem.get_text() for elem in
+                soup.findChildren("p", recursive=False)
+                if elem.get_text().strip() != ""]
+
+        dir2.insert(0, dir1)
+        return dir2
